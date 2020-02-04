@@ -1,0 +1,14 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Setup fast mirror
+      raw: echo -e "Server = https://mirror.metalgamer.eu/archlinux/\$repo/os/\$arch\nServer = https://mirror.metalgamer.eu/archlinux/\$repo/os/\$arch\nhttps://ftp.spline.inf.fu-berlin.de/mirrors/archlinux/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
+      become: true
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (pacman -Syu --noconfirm python)
+      become: true
+      changed_when: false
+    - name: Reboot for kernel updates
+      reboot:
